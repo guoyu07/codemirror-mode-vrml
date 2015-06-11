@@ -1,0 +1,85 @@
+<!doctype html>
+
+<title>CodeMirror: VBScript mode</title>
+<meta charset="utf-8"/>
+<link rel=stylesheet href="../../doc/docs.css">
+
+<link rel="stylesheet" href="../../lib/codemirror.css">
+<link rel="stylesheet" href="../../theme/elegant.css">
+<script src="../../lib/codemirror.js"></script>
+<script src="vrml.js"></script>
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>
+<div id=nav>
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>
+
+  <ul>
+    <li><a href="../../index.html">Home</a>
+    <li><a href="../../doc/manual.html">Manual</a>
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>
+  </ul>
+  <ul>
+    <li><a href="../index.html">Language modes</a>
+    <li><a class=active href="#">VBScript</a>
+  </ul>
+</div>
+
+<article>
+<h2>VRML mode</h2>
+
+
+<div><textarea id="code" name="code">
+#VRML V2.0 utf8
+
+DEF OpenVault Script { 
+    # Declarations of what's in this Script node:
+    eventIn SFTime  openVault
+    eventIn SFBool  combinationEntered
+    eventOut SFTime vaultUnlocked
+    field SFBool    unlocked FALSE
+
+    # Implementation of the logic:
+    url "javascript:
+        function combinationEntered(value) { unlocked = value; }
+        function openVault(value) {
+            if (unlocked) vaultUnlocked = value;
+        }"
+}
+
+Shape {
+    appearance Appearance {
+        material Material { diffuseColor 1 0 0 }
+    }
+    geometry Sphere { }
+}
+
+Sound {
+      source	DEF Click AudioClip {
+	url	"click.wav"
+	stopTime 1
+      }
+
+      minFront	1000
+      maxFront	1000
+      minBack	1000
+      maxBack	1000
+}
+
+
+DEF TS TouchSensor { }
+
+ROUTE TS.isOver TO OpenVault.combinationEntered
+ROUTE TS.touchTime TO OpenVault.openVault
+ROUTE OpenVault.vaultUnlocked TO Click.startTime
+
+</textarea></div>
+
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+		  theme: "elegant",
+        lineNumbers: true,
+        indentUnit: 4
+      });
+    </script>
+
+    <p><strong>MIME types defined:</strong> <code>x-world/x-vrml</code>.</p>
+  </article>
